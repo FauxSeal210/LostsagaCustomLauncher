@@ -1,0 +1,46 @@
+{
+  "name": "lostsagacustomlauncher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build"
+  },
+  "author": "FauxSeal210",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^5.0.0",
+    "electron-builder": "^22.3.2"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2"
+  },
+  "build": {
+    "productName": "LostsagaCustomLauncher",
+    "appId": "kr.fauxseal.lscustomlauncher",
+    "win": {
+      "target": [
+        "zip",
+        "nsis"
+      ],
+      "icon": "./resources/icons/ls.ico",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerLanguages": [
+        "en_US",
+        "ko_KR"
+      ],
+      "language": "1042",
+      "shortcutName": "로스트사가 런쳐 (FauxSeal210)"
+    },
+    "directories": {
+      "buildResources": "resources/installer/",
+      "output": "dist/",
+      "app": "."
+    }
+  }
+}
