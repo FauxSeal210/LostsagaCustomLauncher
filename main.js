@@ -140,6 +140,26 @@ function login(data) {
       })
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Valofe
+     */
+    if (parser.webContents.getURL() == 'https://member.valofe.com/login/login.asp?ret=http%3A%2F%2Flostsaga-ko.valofe.com%2Fmain%2Fmain.asp') {
+      parser.webContents.executeJavaScript(`document.getElementById('uid').value = '${data.id}'`)
+      parser.webContents.executeJavaScript(`document.getElementById('passwd').value = '${data.pw}'`)
+      parser.webContents.executeJavaScript(`document.getElementsByClassName('btnLogin')[0].click()`)
+    }
+
+    if (parser.webContents.getURL() == 'http://vfun-ko.valofe.com/bridge/?url=http%3A%2F%2Flostsaga-ko.valofe.com%2Fmain%2Fmain.asp') {
+      parser.loadURL('http://lostsaga-ko.valofe.com/play/playUrl.asp')
+    }
+
+    if (parser.webContents.getURL() == 'http://lostsaga-ko.valofe.com/play/playUrl.asp') {
+      parser.webContents.executeJavaScript(`document.getElementById('playgame').href`, (playURL) => {
+        startGame(playURL)
+      })
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
   })
 
   switch (data.server) {
@@ -162,6 +182,10 @@ function login(data) {
     case 'HanGame':
       parser.loadURL('https://id.hangame.com/wlogin.nhn?popup=false&adult=false&nxtURL=http%3A//lostsaga.hangame.com/main/main.asp')
       break;
+
+    case 'Valofe':
+      parser.loadURL('https://member.valofe.com/login/login.asp?ret=http%3A%2F%2Flostsaga-ko.valofe.com%2Fmain%2Fmain.asp')
+      break;
   }
 
   saveId(data)
@@ -172,6 +196,34 @@ function processCaptcha(data) {
   parser.webContents.executeJavaScript(`document.getElementById('chptcha').value = '${data.text}'`)
   parser.webContents.executeJavaScript(`document.getElementsByClassName('btn_global')[0].click()`)
   captcha.close()
+}
+
+function goHomePage(server) {
+  switch (server) {
+    case 'Nexon':
+      spawn('cmd.exe', ['/c', 'start', 'http://lostsaga.nexon.com'])
+      break;
+
+    case 'Naver':
+      spawn('cmd.exe', ['/c', 'start', 'http://lostsaga.playnetwork.co.kr'])
+      break;
+
+    case 'Daum':
+      spawn('cmd.exe', ['/c', 'start', 'http://lostsaga.game.daum.net'])
+      break;
+
+    case 'MGame':
+      spawn('cmd.exe', ['/c', 'start', 'http://lostsaga.mgame.com'])
+      break;
+
+    case 'HanGame':
+      spawn('cmd.exe', ['/c', 'start', 'http://lostsaga.hangame.com'])
+      break;
+
+    case 'Valofe':
+      spawn('cmd.exe', ['/c', 'start', 'http://lostsaga-ko.valofe.com'])
+      break;
+  }
 }
 
 function startGame(playURL) {
@@ -219,6 +271,10 @@ ipcMain.on('login', (event, data) => {
 
 ipcMain.on('captcha', (event, data) => {
   processCaptcha(data)
+})
+
+ipcMain.on('homepage', (event, data) => {
+  goHomePage(data.server)
 })
 
 app.on('ready', createWindow)
