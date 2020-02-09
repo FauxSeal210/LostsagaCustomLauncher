@@ -1,6 +1,6 @@
 {
   "name": "lostsagacustomlauncher",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -41,8 +41,7 @@
       "shortcutName": "로스트사가 런쳐 (FauxSeal210)"
     },
     "publish": {
-      "provider": "github",
-      "token": "6b304e6d8a1d79df586ab8a6d265f1b355afed3a"
+      "provider": "github"
     },
     "directories": {
       "buildResources": "resources/installer/",
