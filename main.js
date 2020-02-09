@@ -1,9 +1,12 @@
 const { app, ipcMain, BrowserWindow } = require('electron')
 
 const { spawn } = require('child_process')
+const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 
 let win, parser, captcha
+
+autoUpdater.checkForUpdatesAndNotify()
 
 function createWindow() {
   win = new BrowserWindow({ title: '로스트사가 런쳐', width: 450, height: 350, webPreferences: { nodeIntegration: true }, resizable: false })
