@@ -3,8 +3,18 @@ const { app, ipcMain, BrowserWindow } = require('electron')
 const { spawn } = require('child_process')
 const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
+const os = require('os')
+const path = require('path')
 
 let win, parser, captcha
+
+const dataPath = path.join(os.homedir(), 'LostsagaCustomLauncher/')
+
+if (!fs.existsSync(dataPath)) {
+  fs.mkdirSync(dataPath)
+}
+
+console.log(dataPath)
 
 autoUpdater.checkForUpdatesAndNotify()
 
@@ -235,34 +245,45 @@ function startGame(playURL) {
 }
 
 function saveId(data) {
-  if (data.saveId && data.id != '') {
-    fs.writeFileSync('id', data.id)
-  } else {
-    if (fs.existsSync('id'))
-      fs.unlinkSync('id')
+  const file = dataPath + 'id'
+
+  if (fs.existsSync(file)) {
+    if (data.id == '') {
+      fs.unlinkSync(file)
+    }
+    else {
+      fs.writeFileSync(file, data.id)
+    }
+  } 
+  else if (data.saveId && data.id != '') {
+    fs.writeFileSync(file, data.id)
   }
 }
 
 function saveServer(data) {
+  const file = dataPath + 'server'
+
   if (data.saveServer) {
-    fs.writeFileSync('server', data.server)
+    fs.writeFileSync(file, data.server)
   } else {
-    if (fs.existsSync('server'))
-      fs.unlinkSync('server')
+    if (fs.existsSync(file))
+      fs.unlinkSync(file)
   }
 }
 
 function loadId() {
-  if (fs.existsSync('id')) {
-    let id = fs.readFileSync('id')
+  const file = dataPath + 'id'
+  if (fs.existsSync(file)) {
+    let id = fs.readFileSync(file)
     win.webContents.executeJavaScript(`document.getElementById('idBox').value = '${id}'`)
     win.webContents.executeJavaScript(`document.getElementById('saveId').checked = true`) 
   }
 }
 
 function loadServer() {
-  if (fs.existsSync('server')) {
-    let server = fs.readFileSync('server')
+  const file = dataPath + 'server'
+  if (fs.existsSync(file)) {
+    let server = fs.readFileSync(file)
     win.webContents.executeJavaScript(`document.getElementById('${server}').checked = true`)
     win.webContents.executeJavaScript(`document.getElementById('saveServer').checked = true`)
   }
@@ -278,6 +299,14 @@ ipcMain.on('captcha', (event, data) => {
 
 ipcMain.on('homepage', (event, data) => {
   goHomePage(data.server)
+})
+
+autoUpdater.on('update-downloaded', () => {
+  win.webContents.executeJavaScript(`confirm('새로운 버전의 업데이트가 다운로드 되었습니다. 지금 프로그램을 재시작 하시겠습니까?')`, (confirm) => {
+    if (confirm) {
+      autoUpdater.quitAndInstall(true, true)
+    }
+  })
 })
 
 app.on('ready', createWindow)
