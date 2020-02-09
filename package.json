@@ -42,7 +42,7 @@
     },
     "publish": {
       "provider": "github",
-      "token": "1565ae3b1b41745b5486667bd7fced905287d59e"
+      "token": "bcddfefee19ce6f1026114421d1395da8ca1e3a5"
     },
     "directories": {
       "buildResources": "resources/installer/",
