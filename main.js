@@ -306,6 +306,9 @@ autoUpdater.on('update-downloaded', () => {
     if (confirm) {
       autoUpdater.quitAndInstall(true, true)
     }
+    else {
+      win.webContents.executeJavaScript(`alert('프로그램을 종료할 때 자동으로 업데이트 합니다.')`)
+    }
   })
 })
 
